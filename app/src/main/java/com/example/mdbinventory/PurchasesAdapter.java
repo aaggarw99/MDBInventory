@@ -41,7 +41,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         ((Item) viewHolder).nameOfPurchase.setText(p.getName());
         ((Item) viewHolder).date.setText(p.getDate());
-        ((Item) viewHolder).price.setText(p.getCost());
+        ((Item) viewHolder).price.setText(Integer.toString(p.getCost()));
     }
 
     @Override
