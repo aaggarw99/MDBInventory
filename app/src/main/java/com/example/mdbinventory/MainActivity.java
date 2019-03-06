@@ -1,18 +1,23 @@
 package com.example.mdbinventory;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     RecyclerView listOfPurchases;
     PurchasesAdapter adapter;
     ArrayList<Purchase> purchases;
+    FloatingActionButton fabAdd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +44,16 @@ public class MainActivity extends AppCompatActivity {
         adapter = new PurchasesAdapter(this, purchases);
         listOfPurchases.setAdapter(adapter);
 
+        fabAdd = findViewById(R.id.fab);
+        fabAdd.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case (R.id.fab):
+                startActivity(new Intent(this, NewPurchaseActivity.class));
+        }
     }
 }
