@@ -18,26 +18,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Purchase> purchases;
     FloatingActionButton fabAdd;
 
+    DatabaseHelper mDatabaseHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Purchase dummy = new Purchase("Alcohol", 5, "Something to consume", "Target", "10/15/1999");
-        Purchase dummy2 = new Purchase("Napkins", 1, "A piece of paper", "Target", "02/19/2019");
-        Purchase dummy3 = new Purchase("Forks", 1, "Eating utensil", "Target", "12/31/2018");
 
-        purchases = new ArrayList<>();
-        purchases.add(dummy);
-        purchases.add(dummy2);
-        purchases.add(dummy3);
 
-        Log.i("Size", Integer.toString(purchases.size()));
-        Log.i("Purchases content", purchases.get(0).getName());
-        Log.i("Purchases content", purchases.get(1).getName());
-        Log.i("Purchases content", purchases.get(2).getName());
+        mDatabaseHelper = new DatabaseHelper(this);
 
+        purchases = mDatabaseHelper.getAllData();
+
+
+//        purchases = new ArrayList<>();
+//        Purchase dummy = new Purchase("Alcohol", 5, "Something to consume", "Target", "10/15/1999");
+//        Purchase dummy2 = new Purchase("Napkins", 1, "A piece of paper", "Target", "02/19/2019");
+//        Purchase dummy3 = new Purchase("Forks", 1, "Eating utensil", "Target", "12/31/2018");
+//
+//        purchases.add(dummy);
+//        purchases.add(dummy2);
+//        purchases.add(dummy3);
 
         listOfPurchases = findViewById(R.id.rv);
         listOfPurchases.setLayoutManager(new LinearLayoutManager(this));
@@ -55,5 +58,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case (R.id.fab):
                 startActivity(new Intent(this, NewPurchaseActivity.class));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }

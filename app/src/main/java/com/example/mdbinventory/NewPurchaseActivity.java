@@ -31,6 +31,9 @@ public class NewPurchaseActivity extends AppCompatActivity implements View.OnCli
         dateText = findViewById(R.id.date);
         vendorNameText = findViewById(R.id.vendorName);
         submit = findViewById(R.id.submit);
+        mDatabaseHelper = new DatabaseHelper(this);
+
+        submit.setOnClickListener(this);
 
     }
 
@@ -47,10 +50,25 @@ public class NewPurchaseActivity extends AppCompatActivity implements View.OnCli
                     Toast.makeText(NewPurchaseActivity.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // database handling
 
+                Purchase newP = new Purchase(nameText.getText().toString().trim(),
+                        Integer.parseInt(costText.getText().toString().trim()),
+                        descText.getText().toString().trim(),
+                        vendorNameText.getText().toString().trim(),
+                        dateText.getText().toString().trim());
+                addPurchaseToDB(newP);
 
-                startActivity(new Intent(this, MainActivity.class));
+                //mDatabaseHelper.getData(0);
+        }
+    }
+
+    private void addPurchaseToDB(Purchase p) {
+        boolean success = mDatabaseHelper.addData(p);
+        if (success) {
+            Toast.makeText(this, "Successfully created new purchase", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            Toast.makeText(this, "Error in creating new purchase", Toast.LENGTH_LONG).show();
         }
     }
 }

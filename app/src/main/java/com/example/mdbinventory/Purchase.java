@@ -6,6 +6,7 @@ public class Purchase {
     private String desc;
     private String vendorName;
     private String date;
+    private int id;
 
     public Purchase(String name, int cost, String desc, String vendorName, String date) {
         this.name = name;
@@ -33,6 +34,10 @@ public class Purchase {
 
     public String getDate() {
         return this.date;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

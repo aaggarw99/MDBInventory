@@ -16,6 +16,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     Context context;
     ArrayList<Purchase> purchases;
+
     public PurchasesAdapter(Context context, ArrayList<Purchase> purchases) {
         // passes in a context and list of social objects
         this.context = context;
@@ -36,12 +37,11 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         Purchase p = purchases.get(i);
 
-        // sets values in the cell to the data in our socials list for each social
-        //((Item) viewHolder).eventName.setText(s.getEventName());
-
         ((Item) viewHolder).nameOfPurchase.setText(p.getName());
         ((Item) viewHolder).date.setText(p.getDate());
-        ((Item) viewHolder).price.setText(Integer.toString(p.getCost()));
+
+        String price = "$" + Integer.toString(p.getCost());
+        ((Item) viewHolder).price.setText(price);
     }
 
     @Override

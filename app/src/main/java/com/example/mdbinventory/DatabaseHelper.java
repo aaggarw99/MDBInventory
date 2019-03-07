@@ -2,8 +2,14 @@ package com.example.mdbinventory;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -53,4 +59,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+
+
+    public void getData(int i) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = COL_ID + " = ?";
+        String[] selectionArgs = {Integer.toString(i)};
+        Cursor cursor = db.query(TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        //List<String> data = new ArrayList<>();
+        do {
+            //data.add(cursor.getString(0));
+            //data.add(cursor.getString(1));
+            Log.i("Data List", cursor.getString(0));
+        } while (cursor.moveToNext());
+
+        int count = cursor.getCount();
+        Log.i("COUNT:", Integer.toString(count));
+        cursor.close();
+    }
+
+    public ArrayList<Purchase> getAllData() {
+
+        ArrayList<Purchase> purchases = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Purchase p = new Purchase(
+                        cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_COST))),
+                        cursor.getString(cursor.getColumnIndex(COL_DESC)),
+                        cursor.getString(cursor.getColumnIndex(COL_VENDOR)),
+                        cursor.getString(cursor.getColumnIndex(COL_DATE)));
+                purchases.add(p);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return purchases;
+
+    }
+
 }
