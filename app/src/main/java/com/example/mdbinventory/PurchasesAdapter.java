@@ -1,8 +1,10 @@
 package com.example.mdbinventory;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -51,7 +55,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     // class that holds all cell values in recycler view
-    public class Item extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class Item extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView nameOfPurchase;
         public TextView date;
         public TextView price;
@@ -65,6 +69,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // this allows the cell to be clicked
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         // handles when cell is clicked on
@@ -75,5 +80,43 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //            intent.putExtra();
 //            context.startActivity(intent);
         }
+
+        @Override
+        public boolean onLongClick(final View v) {
+            final Purchase p = purchases.get(getAdapterPosition());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+            builder.setMessage("Are you sure you want to delete this item?")
+                    .setCancelable(false)
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            removeAt(getAdapterPosition(), v.getRootView().getContext());
+
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
+        }
+    }
+
+    public void removeAt(int position, Context context) {
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(context);
+        Purchase p = purchases.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, purchases.size());
+
+        mDatabaseHelper.deleteitem(p.getName());
+    }
+
+    public void setSearchOperation(List<Purchase> newList) {
+        purchases = new ArrayList<>();
+        purchases.addAll(newList);
+        notifyDataSetChanged();
     }
 }

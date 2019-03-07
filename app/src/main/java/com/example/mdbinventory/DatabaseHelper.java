@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String TABLE_NAME = "purchase_table";
+    private static final String TABLE_NAME = "purchasesTable";
     private static final String COL_ID = "id";
     private static final String COL_NAME = "name";
     private static final String COL_COST = "cost";
@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_NAME
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_NAME + " TEXT, "
+                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_NAME + " TEXT NOT NULL UNIQUE, "
                 + COL_COST + " INTEGER, "
                 + COL_DESC + " TEXT, "
                 + COL_VENDOR + " TEXT, "
@@ -109,6 +109,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return purchases;
+
+    }
+
+    public boolean deleteitem(String name){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "DELETE FROM " + TABLE_NAME +
+                " WHERE " + COL_NAME + " = ?";
+
+        String[] strParams = {name};
+
+        db.execSQL(selectQuery, strParams);
+        db.close();
+        return  true;
 
     }
 

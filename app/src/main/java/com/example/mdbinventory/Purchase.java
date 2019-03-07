@@ -1,5 +1,7 @@
 package com.example.mdbinventory;
 
+import android.util.Log;
+
 public class Purchase {
     private String name;
     private int cost;
@@ -14,6 +16,7 @@ public class Purchase {
         this.desc = desc;
         this.vendorName = vendorName;
         this.date = date;
+        this.id = -1;
     }
 
     public String getName() {
@@ -34,6 +37,14 @@ public class Purchase {
 
     public String getDate() {
         return this.date;
+    }
+
+    public int getId() {
+        if (id != -1) {
+            return id;
+        }
+        Log.i("GET ID ERROR", "got -1, meaning ID was not set");
+        return 0;
     }
 
     public void setId(int id) {

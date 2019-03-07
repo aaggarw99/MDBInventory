@@ -1,15 +1,24 @@
 package com.example.mdbinventory;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     PurchasesAdapter adapter;
     ArrayList<Purchase> purchases;
     FloatingActionButton fabAdd;
-
+    SearchView search;
     DatabaseHelper mDatabaseHelper;
 
 
@@ -65,4 +74,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        search.setQueryHint("Enter description here");
+
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                s = s.toLowerCase();
+                List<Purchase> filteredList = new ArrayList<>();
+                for (Purchase p : purchases) {
+                    String purchaseDesc = p.getDesc().toLowerCase();
+                    if (purchaseDesc.contains(s)) {
+                        filteredList.add(p);
+                    }
+                }
+                adapter.setSearchOperation(filteredList);
+
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+
 }
