@@ -3,6 +3,7 @@ package com.example.mdbinventory;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -28,14 +29,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton fabAdd;
     SearchView search;
     DatabaseHelper mDatabaseHelper;
+    String searchFill;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         mDatabaseHelper = new DatabaseHelper(this);
 
@@ -80,9 +80,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
+
+
         search = (SearchView) menu.findItem(R.id.action_search).getActionView();
         search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         search.setQueryHint("Enter description here");
+
+        searchFill = sharedPref.getString("SEARCH", "");
+        if (!searchFill.equals("")) {
+            search.setQuery(searchFill, false);
+        }
 
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -103,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         filteredList.add(p);
                     }
                 }
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("SEARCH", s);
+                editor.commit();
                 adapter.setSearchOperation(filteredList);
 
                 return false;

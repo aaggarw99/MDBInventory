@@ -9,10 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,10 +73,15 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // handles when cell is clicked on
         @Override
         public void onClick(View v) {
-//            Purchase purchase = purchases.get(getAdapterPosition());
-//            Intent intent = new Intent(context, SocialDetail.class);
-//            intent.putExtra();
-//            context.startActivity(intent);
+            Purchase purchase = purchases.get(getAdapterPosition());
+            Intent intent = new Intent(context, PurchaseDetail.class);
+            intent.putExtra("NAME", purchase.getName());
+            intent.putExtra("COST", purchase.getCost());
+            intent.putExtra("VENDOR", purchase.getVendorName());
+            intent.putExtra("DESC", purchase.getDesc());
+            intent.putExtra("DATE", purchase.getDate());
+
+            context.startActivity(intent);
         }
 
         @Override
