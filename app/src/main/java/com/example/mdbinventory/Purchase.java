@@ -2,20 +2,26 @@ package com.example.mdbinventory;
 
 import android.util.Log;
 
-public class Purchase {
+import java.util.Date;
+
+public class Purchase implements Comparable<Purchase> {
     private String name;
     private int cost;
     private String desc;
     private String vendorName;
-    private String date;
+    private int year;
+    private int month;
+    private int day;
     private int id;
 
-    public Purchase(String name, int cost, String desc, String vendorName, String date) {
+    public Purchase(String name, int cost, String desc, String vendorName, int year, int month, int day) {
         this.name = name;
         this.cost = cost;
         this.desc = desc;
         this.vendorName = vendorName;
-        this.date = date;
+        this.year = year;
+        this.month = month;
+        this.day = day;
         this.id = -1;
     }
 
@@ -35,9 +41,11 @@ public class Purchase {
         return this.vendorName;
     }
 
-    public String getDate() {
-        return this.date;
-    }
+    public int getYear() { return this.year; }
+
+    public int getDay() { return this.day; }
+
+    public int getMonth() { return this.month; }
 
     public int getId() {
         if (id != -1) {
@@ -49,6 +57,30 @@ public class Purchase {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(Purchase p) {
+        if (this.year > p.getYear()) {
+            return -1;
+        } else if (this.year < p.getYear()) {
+            return 1;
+        } else {
+            if (this.month > p.getMonth()) {
+                return -1;
+            } else if (this.month < p.getMonth()) {
+                return 1;
+            } else {
+                if (this.day > p.getDay()) {
+                    return -1;
+                } else if (this.day < p.getDay()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
     }
 
 }

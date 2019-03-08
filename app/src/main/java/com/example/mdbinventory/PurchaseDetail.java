@@ -35,13 +35,17 @@ public class PurchaseDetail extends AppCompatActivity implements View.OnClickLis
         Intent i = getIntent();
         String name = i.getStringExtra("NAME");
         String cost = Integer.toString(i.getIntExtra("COST", 0));
-        String date = i.getStringExtra("DATE");
         String desc = i.getStringExtra("DESC");
         String vendor = i.getStringExtra("VENDOR");
+        int year = i.getIntExtra("YEAR", 0);
+        int month = i.getIntExtra("MONTH", 0);
+        int day = i.getIntExtra("DAY", 0);
 
         nameField.setText(name);
         costField.setText(cost);
-        dateField.setText(date);
+
+        dateField.setText(Utils.valsToDateString(year, month, day));
+
         descField.setText(desc);
         vendorField.setText(vendor);
 

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -40,7 +41,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Purchase p = purchases.get(i);
 
         ((Item) viewHolder).nameOfPurchase.setText(p.getName());
-        ((Item) viewHolder).date.setText(p.getDate());
+        ((Item) viewHolder).date.setText(Utils.valsToDateString(p.getYear(), p.getMonth(), p.getDay()));
 
         String price = "$" + Integer.toString(p.getCost());
         ((Item) viewHolder).price.setText(price);
@@ -79,7 +80,9 @@ public class PurchasesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             intent.putExtra("COST", purchase.getCost());
             intent.putExtra("VENDOR", purchase.getVendorName());
             intent.putExtra("DESC", purchase.getDesc());
-            intent.putExtra("DATE", purchase.getDate());
+            intent.putExtra("YEAR", purchase.getYear());
+            intent.putExtra("MONTH", purchase.getMonth());
+            intent.putExtra("DAY", purchase.getDay());
 
             context.startActivity(intent);
         }

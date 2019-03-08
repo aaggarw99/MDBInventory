@@ -9,17 +9,20 @@ import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String TABLE_NAME = "purchasesTable";
+    private static final String TABLE_NAME = "pTable";
     private static final String COL_ID = "id";
     private static final String COL_NAME = "name";
     private static final String COL_COST = "cost";
     private static final String COL_DESC = "description";
     private static final String COL_VENDOR = "vendor";
-    private static final String COL_DATE = "date";
+    private static final String COL_YEAR = "year";
+    private static final String COL_MONTH = "month";
+    private static final String COL_DAY = "day";
 
     public DatabaseHelper(Context context) {
         super(context, TABLE_NAME, null, 1);
@@ -32,7 +35,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COL_COST + " INTEGER, "
                 + COL_DESC + " TEXT, "
                 + COL_VENDOR + " TEXT, "
-                + COL_DATE + " TEXT)";
+                + COL_YEAR + " TEXT, "
+                + COL_MONTH + " TEXT, "
+                + COL_DAY + " TEXT)";
         db.execSQL(createTable);
     }
 
@@ -47,7 +52,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_NAME, p.getName());
         contentValues.put(COL_COST, p.getCost());
-        contentValues.put(COL_DATE, p.getDate());
+        contentValues.put(COL_YEAR, p.getYear());
+        contentValues.put(COL_MONTH, p.getMonth());
+        contentValues.put(COL_DAY, p.getDay());
         contentValues.put(COL_DESC, p.getDesc());
         contentValues.put(COL_VENDOR, p.getVendorName());
 
@@ -58,31 +65,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             return true;
         }
-    }
-
-
-    public void getData(int i) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selection = COL_ID + " = ?";
-        String[] selectionArgs = {Integer.toString(i)};
-        Cursor cursor = db.query(TABLE_NAME,
-                null,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null);
-
-        //List<String> data = new ArrayList<>();
-        do {
-            //data.add(cursor.getString(0));
-            //data.add(cursor.getString(1));
-            Log.i("Data List", cursor.getString(0));
-        } while (cursor.moveToNext());
-
-        int count = cursor.getCount();
-        Log.i("COUNT:", Integer.toString(count));
-        cursor.close();
     }
 
     public ArrayList<Purchase> getAllData() {
@@ -100,7 +82,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_COST))),
                         cursor.getString(cursor.getColumnIndex(COL_DESC)),
                         cursor.getString(cursor.getColumnIndex(COL_VENDOR)),
-                        cursor.getString(cursor.getColumnIndex(COL_DATE)));
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_YEAR))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_MONTH))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_DAY)))
+                );
                 purchases.add(p);
             } while (cursor.moveToNext());
         }
@@ -108,6 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
+        Collections.sort(purchases);
         return purchases;
 
     }
